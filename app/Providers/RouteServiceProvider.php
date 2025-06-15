@@ -9,7 +9,16 @@ use App\Http\Middleware\CheckRole;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * Register services.
+     * The path to the "home" route for your application.
+     *
+     * This is used by Laravel Breeze/Jetstream after login.
+     *
+     * @var string
+     */
+    public const HOME = '/dashboard';
+
+    /**
+     * Register any application services.
      */
     public function register(): void
     {
@@ -17,10 +26,11 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap services.
+     * Bootstrap any application services.
      */
     public function boot(): void
     {
+        // Daftarkan alias middleware 'checkRole'
         Route::aliasMiddleware('checkRole', CheckRole::class);
     }
 }

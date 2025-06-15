@@ -13,7 +13,7 @@ class InternshipController extends Controller
     public function form()
     {
         // View: resources/views/internship/form_pendaftaran.blade.php
-        return view('internship.form_pendaftaran');
+        return view('internship.form');
     }
 
     /**
@@ -42,7 +42,7 @@ class InternshipController extends Controller
     public function statusForm()
     {
         // View: resources/views/internship/status_pkl.blade.php
-        return view('internship.status_pkl');
+        return view('internship.status');
     }
 
     /**
@@ -63,6 +63,6 @@ class InternshipController extends Controller
     public function adminIndex()
     {
         $data = Internship::all();
-        return view('internship.admin_index', compact('data'));
+        return view('internship.admin', compact('data'));
     }
 }

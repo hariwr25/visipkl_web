@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Visit;
+use Carbon\Carbon;
 
 class VisitController extends Controller
 {
@@ -12,7 +13,6 @@ class VisitController extends Controller
      */
     public function form()
     {
-        // View: resources/views/kunjungan/form.blade.php
         return view('kunjungan.form');
     }
 
@@ -30,7 +30,11 @@ class VisitController extends Controller
         ]);
 
         Visit::create($request->only([
-            'institusi', 'alamat', 'tanggal_kunjungan', 'jumlah_peserta', 'kontak_person'
+            'institusi',
+            'alamat',
+            'tanggal_kunjungan',
+            'jumlah_peserta',
+            'kontak_person'
         ]));
 
         return back()->with('success', 'Pendaftaran kunjungan berhasil!');
@@ -41,7 +45,6 @@ class VisitController extends Controller
      */
     public function statusForm()
     {
-        // View: resources/views/kunjungan/status.blade.php
         return view('kunjungan.status');
     }
 
@@ -63,6 +66,27 @@ class VisitController extends Controller
     public function adminIndex()
     {
         $data = Visit::all();
-        return view('kunjungan.admin_index', compact('data'));
+        $total = $data->count();
+        $approved = $data->where('status', 'disetujui')->count();
+        $rejected = $data->where('status', 'ditolak')->count();
+
+        // Data untuk grafik kunjungan per bulan
+        $grouped = $data->groupBy(function ($item) {
+            return Carbon::parse($item->tanggal_kunjungan)->format('F');
+        });
+
+        $chartLabels = $grouped->keys();
+        $chartData = $grouped->map(function ($items) {
+            return count($items);
+        })->values();
+
+        return view('kunjungan.admin', compact(
+            'data',
+            'total',
+            'approved',
+            'rejected',
+            'chartLabels',
+            'chartData'
+        ));
     }
 }
